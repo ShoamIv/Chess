@@ -18,4 +18,11 @@ public class Position {
         return (this._x==p._x && this._y==p._y);
     }
 
+    @Override
+    public String toString() {
+        return "(" +
+                _x +
+                ", " + _y +
+                ')';
+    }
 }
