@@ -603,7 +603,7 @@ public class GameLogic implements PlayableLogic {
         }
         return copy;
     }
-//606shoam
+
     private void printStatsByKills() {
         Pawn[] arrOfPawns = getArrayOfPawns(player1.get_pieces(), player2.get_pieces());
         Arrays.sort(arrOfPawns, new SortByKills());
