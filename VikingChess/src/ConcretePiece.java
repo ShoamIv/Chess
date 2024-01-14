@@ -1,6 +1,5 @@
 import java.util.ArrayList;
 import java.util.Comparator;
-import java.util.Iterator;
 
 public abstract class ConcretePiece implements Piece {
     private Player owner;
@@ -25,7 +24,7 @@ public abstract class ConcretePiece implements Piece {
         id = index;
         positionsArrayList.add(pos);
         ((ConcretePlayer) p).addConcretePiece(this);
-        System.out.println("id: " + id + " player: " + p.toString());
+    //    System.out.println("id: " + id + " player: " + p.toString());
     }
 
     public ConcretePiece(Player p, int index, Position pos, String t) {
@@ -34,7 +33,7 @@ public abstract class ConcretePiece implements Piece {
         positionsArrayList.add(pos);
         type = t;
         ((ConcretePlayer) p).addConcretePiece(this);
-        System.out.println("id: " + id + " player: " + p.toString());
+      //  System.out.println("id: " + id + " player: " + p.toString());
     }
 
     @Override
@@ -44,6 +43,7 @@ public abstract class ConcretePiece implements Piece {
 
     private void add_squares(int append) {
         squares += append;
+        steps++;
     }
 
     public void addPosition(Position p) {
@@ -71,17 +71,18 @@ public abstract class ConcretePiece implements Piece {
         id = index;
     }
 
-    public void printPositions() {
-        Iterator<Position> iterator = positionsArrayList.iterator();
-        while (iterator.hasNext()) {
-            System.out.print(iterator.next().toString() + ",, ");
-        }
-    }
+//    public void printPositions() {
+//        Iterator<Position> iterator = positionsArrayList.iterator();
+//        while (iterator.hasNext()) {
+//            String s1 = iterator.next().toString();
+//            System.out.print(iterator.next().toString() + ",, ");
+//        }
+//    }
 
     @Override
     public String toString() {
-        printPositions();
-        return "id: " + id + " squares: " + squares;
+ //     Iterator<Position> iterator = positionsArrayList.iterator();
+        return id + ": " + positionsArrayList.toString();
     }
 
     public boolean isPawn() {

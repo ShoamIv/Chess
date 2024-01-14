@@ -2,7 +2,7 @@ import java.util.Comparator;
 
 public class Position {
     private int _x, _y;
-    private int[] _pieces = new int[38]; //_pieces[0] will store the amount of pieces
+    private int[] _pieces = new int[38]; //_pieces[0] will store the amount of pieces, _pieces[14]-_pieces[37] will store p2's pieces
 
     public void set_pieces(int id) {
         if (isFirstAppearance(id)) {
