@@ -4,17 +4,17 @@ public class Pawn extends ConcretePiece {
     private static String t = "♙";
     private int kills = 0;
 
-    @Override
-    public String toString() {
-        if (getOwner().isPlayerOne()) {
-            return "D" + getId() +
-                    ": " + kills +
-                    "kills";
-        }
-        return "A" + getId() +
-                ": " + kills +
-                "kills";
-    }
+//    @Override
+//    public String toString() {
+//        if (getOwner().isPlayerOne()) {
+//            return getId() +
+//                    ": " + kills +
+//                    "kills";
+//        }
+//        return getId() +
+//                ": " + kills +
+//                "kills";
+//    }
 
     public Pawn(Player p) {
         super((ConcretePlayer) p);
