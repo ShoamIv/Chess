@@ -7,8 +7,8 @@ public class ConcretePlayer  implements Player {
     @Override
     public String toString() {
         if(_playerOne){
-            return "1";
-        }else return "2";
+            return "D";
+        }else return "A";
     }
 
     public ConcretePiece[] get_pieces() {

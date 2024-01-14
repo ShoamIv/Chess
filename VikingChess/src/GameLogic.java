@@ -567,55 +567,84 @@ public class GameLogic implements PlayableLogic {
 
     private void printStats(Player w, Player l) {
         printStatsBySteps(w, l);
-      //  printStatsByKills();
+        printStatsByKills();
         printStatsBySquares();
         printStatsByPieces();
     }
 
     // private void statsBy
     private void printStatsBySteps(Player w, Player l) {
-        Arrays.sort(((ConcretePlayer) w).get_pieces(), new SortBySteps());
-        Arrays.sort(((ConcretePlayer) l).get_pieces(), new SortBySteps());
+        ConcretePiece[] copyW = copyArrayOfConcretePiece(((ConcretePlayer) w).get_pieces());
+        Arrays.sort(copyW, new SortBySteps());
+        ConcretePiece[] copyL = copyArrayOfConcretePiece(((ConcretePlayer) l).get_pieces());
+        Arrays.sort(copyL, new SortBySteps());
         if (w.isPlayerOne()) {
             for (int i = 0; i < 13; i++) {
-                System.out.println("D" + ((ConcretePlayer) w).get_pieces()[i].toString());
+                System.out.println("D" + copyW[i].toString());
             }
             for (int i = 0; i < 24; i++) {
-                System.out.println("A" + ((ConcretePlayer) l).get_pieces()[i].toString());
+                System.out.println("A" + copyL[i].toString());
             }
         } else {
             for (int i = 0; i < 24; i++) {
-                System.out.println("A" + ((ConcretePlayer) w).get_pieces()[i].toString());
+                System.out.println("A" + copyW[i].toString());
             }
             for (int i = 0; i < 13; i++) {
-                System.out.println("D" + ((ConcretePlayer) l).get_pieces()[i].toString());
+                System.out.println("D" + copyL[i].toString());
             }
         }
+    }
+
+    private ConcretePiece[] copyArrayOfConcretePiece(ConcretePiece[] concretePieces) {
+        int l = concretePieces.length;
+        ConcretePiece[] copy = new ConcretePiece[l];
+        for (int i = 0; i < l; i++) {
+            copy[i] = concretePieces[i];
+        }
+        return copy;
     }
 
     private void printStatsByKills() {
         Pawn[] arrOfPawns = getArrayOfPawns(player1.get_pieces(), player2.get_pieces());
         Arrays.sort(arrOfPawns, new SortByKills());
-        System.out.println(Arrays.toString(arrOfPawns));
+        for (int i = 0; i < 36; i++) {
+            System.out.println(arrOfPawns[i].getOwner().toString() + arrOfPawns[i].getId() + ": " + arrOfPawns[i].getKills() + " kills");
+        }
     }
 
     private Pawn[] getArrayOfPawns(ConcretePiece[] player1, ConcretePiece[] player2) {
         Pawn[] arr = new Pawn[36];
         for (int i = 0; i < 13; i++) {
             if (i != 6) {
-                arr[i] =(Pawn) player1[i];
-            }else {
-                arr[i] =(Pawn) player2[0];
+                arr[i] = (Pawn) player1[i];
+            } else {
+                arr[i] = (Pawn) player2[0];
             }
         }
         for (int i = 1; i < 24; i++) {
-                arr[i+12] =(Pawn) player2[i];
+            arr[i + 12] = (Pawn) player2[i];
         }
         return arr;
     }
 
     private void printStatsBySquares() {
-        return;
+        ConcretePiece[] arrayOfConcretePieces = getArrayOfConcretePieces(player1.get_pieces(), player2.get_pieces());
+        Arrays.sort(arrayOfConcretePieces, new SortBySquares());
+        for (int i = 0; i < 36; i++) {
+            System.out.println(arrayOfConcretePieces[i].getOwner().toString() + arrayOfConcretePieces[i].getId() + ": " + arrayOfConcretePieces[i].getSquares() + " squares");
+        }
+
+    }
+
+    private ConcretePiece[] getArrayOfConcretePieces(ConcretePiece[] player1, ConcretePiece[] player2) {
+        ConcretePiece[] arr = new ConcretePiece[37];
+        for (int i = 0; i < 13; i++) {
+            arr[i] = player1[i];
+        }
+        for (int i = 13; i < 37; i++) {
+            arr[i] = player2[i-13];
+        }
+        return arr;
     }
 
     private void printStatsByPieces() {
