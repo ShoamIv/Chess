@@ -9,6 +9,11 @@ public class ConcretePlayer  implements Player {
             return "1";
         }else return "2";
     }
+
+    public ConcretePiece[] get_pieces() {
+        return _pieces;
+    }
+
     public void printPieces(){
         for (int i = 0; i<_pieces.length; i++){
             System.out.println("piece ID "+_pieces[i].getId() + "had ");
@@ -25,7 +30,7 @@ public class ConcretePlayer  implements Player {
         }
     }
     public void addConcretePiece(ConcretePiece concretePiece){
-        if (concretePiece.getType().equals("♙")){
+        if (concretePiece.isPawn()){
             addPawn((Pawn) concretePiece);
         }else {
             addKing((King) concretePiece);
