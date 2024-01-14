@@ -27,6 +27,10 @@ public abstract class ConcretePiece implements Piece {
     //    System.out.println("id: " + id + " player: " + p.toString());
     }
 
+    public ArrayList<Position> getPositionsArrayList() {
+        return positionsArrayList;
+    }
+
     public ConcretePiece(Player p, int index, Position pos, String t) {
         owner = p;
         id = index;
@@ -35,7 +39,12 @@ public abstract class ConcretePiece implements Piece {
         ((ConcretePlayer) p).addConcretePiece(this);
       //  System.out.println("id: " + id + " player: " + p.toString());
     }
-
+    public ConcretePiece(ConcretePiece concretePiece){
+        owner= concretePiece.getOwner();
+        id = concretePiece.getId();
+        positionsArrayList = concretePiece.getPositionsArrayList();
+        type = concretePiece.getType();
+    }
     @Override
     public Player getOwner() {
         return owner;
