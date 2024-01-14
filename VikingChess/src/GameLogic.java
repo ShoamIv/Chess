@@ -8,12 +8,12 @@ public class GameLogic implements PlayableLogic {
     private final Position Corner2 = new Position(0, 10);
     private final Position Corner3 = new Position(10, 0);
     private final Position Corner4 = new Position(10, 10);
-
     private int turns;
     private boolean gameover;
     private final ConcretePlayer player1 = new ConcretePlayer(true);
     private final ConcretePlayer player2 = new ConcretePlayer(false);
     private Position[][] positions = new Position[11][11];
+    private ArrayList<Position>[] positionsArrayList=new ArrayList[37];
 
     /**
      * Simple Constructor.
@@ -54,52 +54,13 @@ public class GameLogic implements PlayableLogic {
                 positions[i][j] = new Position(i, j);
             }
         }
-        /*
-        for (int i = 3; i < 8; i++) {
-            //p2
-            positions[i][0] = new Position(i, 0);
-            positions[i][0] = new Position(i, 10);
-            if (i < 5) {
-                if (i == 3) {
-                    positions[i + 2][i] = new Position(i + 2, i);
-                    positions[i + 2][i + 4] = new Position(i + 2, i + 4);
-                }
-                if (i == 4) {
-                    for (int j = 2; j < 5; j++) {
-                        positions[j + 2][i] = new Position(j + 2, i);
-                        positions[j + 2][i + 2] = new Position(j + 2, i + 2);
-                    }
-                }
-                positions[0][i] = new Position(0, i);
-                positions[10][i] = new Position(10, i);
-            }
-            if (i == 5) {
-                for (int j = 5; j < 10; j++) {
-                    if (j != 7) {
-                        positions[j - 2][i] = new Position(j - 2, i);
-                    } else {
-                        positions[j - 2][i] = new Position(j - 2, i);
-                    }
-                }
-                positions[i][1] = new Position(i, 1);
-                positions[i][9] = new Position(i, 9);
-                for (int j = 0; j < 2; j++) {
-                    positions[j][i] = new Position(j, i);
-                    positions[j + 9][i] = new Position(j + 9, i);
-                }
-            }
-            if (i > 5) {
-                positions[0][i] = new Position(0, i);
-                positions[10][i] = new Position(10, i);
-            }
-        }
-    */
     }
 
     private void setPieces() { // sets ID and owner for every ConcretePiece on the board
         for (int i = 3; i < 8; i++) {
             //p2
             _board[i][0] = new Pawn(player2, (i - 2), new Position(i, 0)); // p2 1-5
+            positionsArrayList[i-2].add(new Position(i, 0));
             _board[i][10] = new Pawn(player2, (i + 17), new Position(i, 10)); // p2 20-24
             if (i < 5) {
                 if (i == 3) {

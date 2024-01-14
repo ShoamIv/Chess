@@ -12,21 +12,11 @@ public abstract class ConcretePiece implements Piece {
     public ConcretePiece(Player p) {
         owner = p;
     }
-
     public ConcretePiece(Player p, int index) {
         owner = p;
         id = index;
 
     }
-
-    public ConcretePiece(Player p, int index, Position pos) {
-        owner = p;
-        id = index;
-        positionsArrayList.add(pos);
-        ((ConcretePlayer) p).addConcretePiece(this);
-    //    System.out.println("id: " + id + " player: " + p.toString());
-    }
-
     public ArrayList<Position> getPositionsArrayList() {
         return positionsArrayList;
     }
@@ -37,13 +27,6 @@ public abstract class ConcretePiece implements Piece {
         positionsArrayList.add(pos);
         type = t;
         ((ConcretePlayer) p).addConcretePiece(this);
-      //  System.out.println("id: " + id + " player: " + p.toString());
-    }
-    public ConcretePiece(ConcretePiece concretePiece){
-        owner= concretePiece.getOwner();
-        id = concretePiece.getId();
-        positionsArrayList = concretePiece.getPositionsArrayList();
-        type = concretePiece.getType();
     }
     @Override
     public Player getOwner() {
@@ -57,13 +40,11 @@ public abstract class ConcretePiece implements Piece {
 
     public void addPosition(Position p) {
         calcSquares(p);
-        //  System.out.println("id: " + id + " squares: " + squares);
     }
 
     private void add_position_to_list(Position p) {
         positionsArrayList.add(p);
     }
-
     private void calcSquares(Position p) {
         int x_diff = Math.abs(p.GetX() - positionsArrayList.getLast().GetX());
         int y_diff = Math.abs(p.GetY() - positionsArrayList.getLast().GetY());
@@ -75,22 +56,8 @@ public abstract class ConcretePiece implements Piece {
     public int getId() {
         return id;
     }
-
-    public void setId(int index) {
-        id = index;
-    }
-
-//    public void printPositions() {
-//        Iterator<Position> iterator = positionsArrayList.iterator();
-//        while (iterator.hasNext()) {
-//            String s1 = iterator.next().toString();
-//            System.out.print(iterator.next().toString() + ",, ");
-//        }
-//    }
-
     @Override
     public String toString() {
- //     Iterator<Position> iterator = positionsArrayList.iterator();
         return id + ": " + positionsArrayList.toString();
     }
 
@@ -101,25 +68,11 @@ public abstract class ConcretePiece implements Piece {
     public boolean isKing() {
         return this.type.equals("♔");
     }
-
-    public void setOwner(Player owner) {
-        this.owner = owner;
-    }
-
     public int getSteps() {
         return steps;
     }
-
-    public void setSteps(int steps) {
-        this.steps = steps;
-    }
-
     public int getSquares() {
         return squares;
-    }
-
-    public void setSquares(int squares) {
-        this.squares = squares;
     }
 
     public int getWins() {
