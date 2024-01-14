@@ -1,6 +1,7 @@
 public class ConcretePlayer  implements Player {
     private boolean _playerOne;
     private int _win;
+
     private ConcretePiece[] _pieces;
 
     @Override
@@ -9,12 +10,11 @@ public class ConcretePlayer  implements Player {
             return "1";
         }else return "2";
     }
-    public void printPieces(){
-        for (int i = 0; i<_pieces.length; i++){
-            System.out.println("piece ID "+_pieces[i].getId() + "had ");
-            _pieces[i].printPositions();
-        }
+
+    public ConcretePiece[] get_pieces() {
+        return _pieces;
     }
+
     public ConcretePlayer(boolean playerOne){
         this._playerOne=playerOne;
         this._win=0;
@@ -25,12 +25,12 @@ public class ConcretePlayer  implements Player {
         }
     }
     public void addConcretePiece(ConcretePiece concretePiece){
-        if (concretePiece.getType().equals("♙")){
+        if (concretePiece.isPawn()){
             addPawn((Pawn) concretePiece);
         }else {
             addKing((King) concretePiece);
         }
-        System.out.println(concretePiece.toString() + "added successfully");
+     //   System.out.println(concretePiece.toString() + "added successfully");
     }
     private void addPawn(Pawn pawn){
         _pieces[pawn.getId() - 1] = pawn;

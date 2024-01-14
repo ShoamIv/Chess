@@ -1,4 +1,6 @@
-import java.util.Objects;
+import java.util.ArrayList;
+import java.util.Arrays;
+import java.util.Iterator;
 
 public class GameLogic implements PlayableLogic {
     ConcretePiece[][] _board = new ConcretePiece[getBoardSize()][getBoardSize()];
@@ -11,6 +13,7 @@ public class GameLogic implements PlayableLogic {
     private boolean gameover;
     private final ConcretePlayer player1 = new ConcretePlayer(true);
     private final ConcretePlayer player2 = new ConcretePlayer(false);
+    private Position[][] positions = new Position[11][11];
 
     /**
      * Simple Constructor.
@@ -32,6 +35,7 @@ public class GameLogic implements PlayableLogic {
     public void init() {
         resetBoard();
         setPieces();
+        setPositions();
     }
 
     private void resetBoard() {         //first,Set pieces to null and game-state to false.
@@ -44,11 +48,59 @@ public class GameLogic implements PlayableLogic {
         }
     }
 
+    private void setPositions() {
+        for (int i = 0; i < 11; i++) {
+            for (int j = 0; j < 11; j++) {
+                positions[i][j] = new Position(i, j);
+            }
+        }
+        /*
+        for (int i = 3; i < 8; i++) {
+            //p2
+            positions[i][0] = new Position(i, 0);
+            positions[i][0] = new Position(i, 10);
+            if (i < 5) {
+                if (i == 3) {
+                    positions[i + 2][i] = new Position(i + 2, i);
+                    positions[i + 2][i + 4] = new Position(i + 2, i + 4);
+                }
+                if (i == 4) {
+                    for (int j = 2; j < 5; j++) {
+                        positions[j + 2][i] = new Position(j + 2, i);
+                        positions[j + 2][i + 2] = new Position(j + 2, i + 2);
+                    }
+                }
+                positions[0][i] = new Position(0, i);
+                positions[10][i] = new Position(10, i);
+            }
+            if (i == 5) {
+                for (int j = 5; j < 10; j++) {
+                    if (j != 7) {
+                        positions[j - 2][i] = new Position(j - 2, i);
+                    } else {
+                        positions[j - 2][i] = new Position(j - 2, i);
+                    }
+                }
+                positions[i][1] = new Position(i, 1);
+                positions[i][9] = new Position(i, 9);
+                for (int j = 0; j < 2; j++) {
+                    positions[j][i] = new Position(j, i);
+                    positions[j + 9][i] = new Position(j + 9, i);
+                }
+            }
+            if (i > 5) {
+                positions[0][i] = new Position(0, i);
+                positions[10][i] = new Position(10, i);
+            }
+        }
+    */
+    }
+
     private void setPieces() { // sets ID and owner for every ConcretePiece on the board
         for (int i = 3; i < 8; i++) {
             //p2
             _board[i][0] = new Pawn(player2, (i - 2), new Position(i, 0)); // p2 1-5
-            _board[i][0] = new Pawn(player2, (i + 17), new Position(i, 10)); // p2 20-24
+            _board[i][10] = new Pawn(player2, (i + 17), new Position(i, 10)); // p2 20-24
             if (i < 5) {
                 if (i == 3) {
                     _board[i + 2][i] = new Pawn(player1, (i - 2), new Position(i + 2, i));// p1 1
@@ -72,7 +124,7 @@ public class GameLogic implements PlayableLogic {
                     }
                 }
                 _board[i][1] = new Pawn(player2, i + 1, new Position(i, 1));// p2 6
-                _board[i][9] = new Pawn(player2, i + 4, new Position(i, 9));// p2 19
+                _board[i][9] = new Pawn(player2, i + 14, new Position(i, 9));// p2 19
                 for (int j = 0; j < 2; j++) {
                     _board[j][i] = new Pawn(player2, j + 11, new Position(j, i));// p2 11, 12
                     _board[j + 9][i] = new Pawn(player2, j + 13, new Position(j + 9, i));// p2 13, 14
@@ -113,7 +165,7 @@ public class GameLogic implements PlayableLogic {
         if (!isSecondPlayerTurn() && !getPieceAtPosition(a).getOwner().isPlayerOne()) {
             return false;
         }
-        System.out.println(_board[a.GetX()][a.GetY()].getOwner().toString() + ":(" + b.GetX() + "," + b.GetY() + ")");
+        // System.out.println(_board[a.GetX()][a.GetY()].getOwner().toString() + ":(" + b.GetX() + "," + b.GetY() + ")");
         Piece piece = getPieceAtPosition(a);
         ChangePosition(piece, a, b);
         IsCorner(b);
@@ -125,7 +177,28 @@ public class GameLogic implements PlayableLogic {
     private void ChangePosition(Piece piece, Position a, Position b) {
         _board[b.GetX()][b.GetY()] = (ConcretePiece) piece;
         _board[a.GetX()][a.GetY()] = null;
-        ((ConcretePiece) piece).addPosition(b);
+        addPosition(b, (ConcretePiece) piece);
+    }
+
+    private void addPosition(Position p, ConcretePiece concretePiece) {
+        concretePiece.addPosition(p);
+        if (concretePiece.getOwner().isPlayerOne()) {
+            positions[p.GetX()][p.GetY()].set_pieces(concretePiece.getId());
+        } else {
+            positions[p.GetX()][p.GetY()].set_pieces(concretePiece.getId() + 13);
+        }
+    }
+
+    private ArrayList<Position> steppedPositions() {
+        ArrayList<Position> steppedPositionsArrayList = new ArrayList<Position>();
+        for (int i = 0; i < getBoardSize(); i++) {
+            for (int j = 0; j < getBoardSize(); j++) {
+                if (positions[i][j].get_pieces() > 1) {
+                    steppedPositionsArrayList.add(positions[i][j]);
+                }
+            }
+        }
+        return steppedPositionsArrayList;
     }
 
     private boolean ValidPath(Position a, Position b) {
@@ -184,6 +257,7 @@ public class GameLogic implements PlayableLogic {
 
     private void addEat(Position a) {
         ((Pawn) _board[a.GetX()][a.GetY()]).kill();
+        ((ConcretePlayer) ((Pawn) _board[a.GetX()][a.GetY()]).getOwner()).addConcretePiece(_board[a.GetX()][a.GetY()]);
     }
 
     private void CheckSurrounding(Position a) {
@@ -195,7 +269,7 @@ public class GameLogic implements PlayableLogic {
                 if (_board[a.GetX() + 1][a.GetY()].isKing()) {
                     gameover = EatKing(new Position(a.GetX() + 1, a.GetY()), p);
                     addEat(a);
-                } else if (_board[a.GetX() + 1][a.GetY()].isKing()) {
+                } else if (_board[a.GetX() + 1][a.GetY()].isPawn()) {
                     _board[a.GetX() + 1][a.GetY()] = null;
                     addEat(a);
                 }
@@ -206,7 +280,7 @@ public class GameLogic implements PlayableLogic {
                 if (_board[a.GetX() - 1][a.GetY()].isKing()) {
                     gameover = EatKing(new Position(a.GetX() - 1, a.GetY()), p);
                     addEat(a);
-                } else if (_board[a.GetX() - 1][a.GetY()].isKing()) {
+                } else if (_board[a.GetX() - 1][a.GetY()].isPawn()) {
                     _board[a.GetX() - 1][a.GetY()] = null;
                     addEat(a);
                 }
@@ -217,7 +291,7 @@ public class GameLogic implements PlayableLogic {
                 if (_board[a.GetX()][a.GetY() - 1].isKing()) {
                     gameover = EatKing(new Position(a.GetX(), a.GetY() - 1), p);
                     addEat(a);
-                } else if (_board[a.GetX()][a.GetY() - 1].isKing()) {
+                } else if (_board[a.GetX()][a.GetY() - 1].isPawn()) {
                     _board[a.GetX()][a.GetY() - 1] = null;
                     addEat(a);
                 }
@@ -228,8 +302,10 @@ public class GameLogic implements PlayableLogic {
                 if (_board[a.GetX()][a.GetY() + 1].isKing()) {
                     gameover = EatKing(new Position(a.GetX(), a.GetY() + 1), p);
                     addEat(a);
-                } else if (_board[a.GetX()][a.GetY() + 1].isKing()) _board[a.GetX()][a.GetY() + 1] = null;
-                addEat(a);
+                } else if (_board[a.GetX()][a.GetY() + 1].isPawn()) {
+                    _board[a.GetX()][a.GetY() + 1] = null;
+                    addEat(a);
+                }
             }
         }
     }
@@ -458,9 +534,11 @@ public class GameLogic implements PlayableLogic {
         if (gameover) {
             if (isSecondPlayerTurn()) {
                 player1.IncreaseWins();
+                printStats(player1, player2);
                 return gameover;
             }
             player2.IncreaseWins();
+            printStats(player2, player1);
             return gameover;
         }
         return false;
@@ -485,5 +563,68 @@ public class GameLogic implements PlayableLogic {
     @Override
     public int getBoardSize() {
         return 11;
+    }
+
+    private void printStats(Player w, Player l) {
+        printStatsBySteps(w, l);
+      //  printStatsByKills();
+        printStatsBySquares();
+        printStatsByPieces();
+    }
+
+    // private void statsBy
+    private void printStatsBySteps(Player w, Player l) {
+        Arrays.sort(((ConcretePlayer) w).get_pieces(), new SortBySteps());
+        Arrays.sort(((ConcretePlayer) l).get_pieces(), new SortBySteps());
+        if (w.isPlayerOne()) {
+            for (int i = 0; i < 13; i++) {
+                System.out.println("D" + ((ConcretePlayer) w).get_pieces()[i].toString());
+            }
+            for (int i = 0; i < 24; i++) {
+                System.out.println("A" + ((ConcretePlayer) l).get_pieces()[i].toString());
+            }
+        } else {
+            for (int i = 0; i < 24; i++) {
+                System.out.println("A" + ((ConcretePlayer) w).get_pieces()[i].toString());
+            }
+            for (int i = 0; i < 13; i++) {
+                System.out.println("D" + ((ConcretePlayer) l).get_pieces()[i].toString());
+            }
+        }
+    }
+
+    private void printStatsByKills() {
+        Pawn[] arrOfPawns = getArrayOfPawns(player1.get_pieces(), player2.get_pieces());
+        Arrays.sort(arrOfPawns, new SortByKills());
+        System.out.println(Arrays.toString(arrOfPawns));
+    }
+
+    private Pawn[] getArrayOfPawns(ConcretePiece[] player1, ConcretePiece[] player2) {
+        Pawn[] arr = new Pawn[36];
+        for (int i = 0; i < 13; i++) {
+            if (i != 6) {
+                arr[i] =(Pawn) player1[i];
+            }else {
+                arr[i] =(Pawn) player2[0];
+            }
+        }
+        for (int i = 1; i < 24; i++) {
+                arr[i+12] =(Pawn) player2[i];
+        }
+        return arr;
+    }
+
+    private void printStatsBySquares() {
+        return;
+    }
+
+    private void printStatsByPieces() {
+        ArrayList<Position> steppedPositionsArrayList = steppedPositions();
+        steppedPositionsArrayList.sort(new SortByPieces());
+        Iterator<Position> iterator = steppedPositionsArrayList.iterator();
+        while (iterator.hasNext()) {
+            Position position = iterator.next();
+            System.out.println(position.toString() + position.get_pieces() + " pieces");
+        }
     }
 }
