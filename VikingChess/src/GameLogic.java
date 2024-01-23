@@ -13,7 +13,7 @@ public class GameLogic implements PlayableLogic {
     private final ConcretePlayer player1 = new ConcretePlayer(true);
     private final ConcretePlayer player2 = new ConcretePlayer(false);
     private Position[][] positions = new Position[11][11];
-    private ArrayList<Position>[] positionsArrayList=new ArrayList[37];
+    private ArrayList<Position>[] positionsArrayList = new ArrayList[37];
 
     /**
      * Simple Constructor.
@@ -34,8 +34,15 @@ public class GameLogic implements PlayableLogic {
      */
     public void init() {
         resetBoard();
+        initArrayList();
         setPieces();
         setPositions();
+    }
+
+    private void initArrayList() {
+        for (int i = 0; i < 37; i++) {
+            this.positionsArrayList[i] = new ArrayList<Position>();
+        }
     }
 
     private void resetBoard() {         //first,Set pieces to null and game-state to false.
@@ -60,40 +67,55 @@ public class GameLogic implements PlayableLogic {
         for (int i = 3; i < 8; i++) {
             //p2
             _board[i][0] = new Pawn(player2, (i - 2), new Position(i, 0)); // p2 1-5
-            positionsArrayList[i-2].add(new Position(i, 0));
+            positionsArrayList[i + 10].add(new Position(i, 0));
             _board[i][10] = new Pawn(player2, (i + 17), new Position(i, 10)); // p2 20-24
+            positionsArrayList[i + 29].add(new Position(i, 10));
             if (i < 5) {
                 if (i == 3) {
                     _board[i + 2][i] = new Pawn(player1, (i - 2), new Position(i + 2, i));// p1 1
+                    positionsArrayList[i - 3].add(new Position(i + 2, i));
                     _board[i + 2][i + 4] = new Pawn(player1, (i + 10), new Position(i + 2, i + 4));// p1 13
+                    positionsArrayList[i + 9].add(new Position(i + 2, i + 4));
                 }
                 if (i == 4) {
                     for (int j = 2; j < 5; j++) {
                         _board[j + 2][i] = new Pawn(player1, (j), new Position(j + 2, i));// p1 2-4
+                        positionsArrayList[j - 1].add(new Position(j + 2, i));
                         _board[j + 2][i + 2] = new Pawn(player1, (j + 8), new Position(j + 2, i + 2));// p1 10-12
+                        positionsArrayList[j + 7].add(new Position(j + 2, i + 2));
                     }
                 }
                 _board[0][i] = new Pawn(player2, (2 * i) + 1, new Position(0, i));// p2 7, 9
+                positionsArrayList[(2 * i) + 13].add(new Position(0, i));
                 _board[10][i] = new Pawn(player2, (2 * i) + 2, new Position(10, i));// p2 8,10
+                positionsArrayList[(2 * i) + 14].add(new Position(10, i));
             }
             if (i == 5) {
                 for (int j = 5; j < 10; j++) {
                     if (j != 7) {// p1 5-9
                         _board[j - 2][i] = new Pawn(player1, j, new Position(j - 2, i));
+                        positionsArrayList[j - 1].add(new Position(j - 2, i));
                     } else {
                         _board[j - 2][i] = new King(player1, j, new Position(j - 2, i));
+                        positionsArrayList[j - 1].add(new Position(j - 2, i));
                     }
                 }
                 _board[i][1] = new Pawn(player2, i + 1, new Position(i, 1));// p2 6
+                positionsArrayList[i + 13].add(new Position(i, 1));
                 _board[i][9] = new Pawn(player2, i + 14, new Position(i, 9));// p2 19
+                positionsArrayList[i + 26].add(new Position(i, 9));
                 for (int j = 0; j < 2; j++) {
                     _board[j][i] = new Pawn(player2, j + 11, new Position(j, i));// p2 11, 12
+                    positionsArrayList[j + 23].add(new Position(j, i));
                     _board[j + 9][i] = new Pawn(player2, j + 13, new Position(j + 9, i));// p2 13, 14
+                    positionsArrayList[j + 25].add(new Position(j + 9, i));
                 }
             }
             if (i > 5) {
                 _board[0][i] = new Pawn(player2, (2 * i) + 3, new Position(0, i));// p2 15, 17
+                positionsArrayList[(2 * i) + 15].add(new Position(0, i));
                 _board[10][i] = new Pawn(player2, (2 * i) + 4, new Position(10, i));// p2 16, 18
+                positionsArrayList[(2 * i) + 16].add(new Position(10, i));
             }
         }
     }
@@ -139,6 +161,15 @@ public class GameLogic implements PlayableLogic {
         _board[b.GetX()][b.GetY()] = (ConcretePiece) piece;
         _board[a.GetX()][a.GetY()] = null;
         addPosition(b, (ConcretePiece) piece);
+        if (piece.getOwner().isPlayerOne()) {
+            addPosition(b, ((ConcretePiece) piece).getId() - 1);
+        } else {
+            addPosition(b, ((ConcretePiece) piece).getId() + 12);
+        }
+    }
+
+    private void addPosition(Position p, int id) {
+        positionsArrayList[id].add(p);
     }
 
     private void addPosition(Position p, ConcretePiece concretePiece) {
@@ -603,7 +634,7 @@ public class GameLogic implements PlayableLogic {
             arr[i] = player1[i];
         }
         for (int i = 13; i < 37; i++) {
-            arr[i] = player2[i-13];
+            arr[i] = player2[i - 13];
         }
         return arr;
     }
