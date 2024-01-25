@@ -4,21 +4,27 @@ import java.util.Comparator;
 public abstract class ConcretePiece implements Piece {
     private Player owner;
     String type;
-    private ArrayList<Position> positionsArrayList = new ArrayList<Position>();
+    private ArrayList<Position> positionsArrayList = new ArrayList<Position>(); //should be depreciated
     private int steps = 0;
     private int squares = 0;
     private int id; // save id of piece according to the figure in the assignment
 
     public ConcretePiece(Player p) {
         owner = p;
+        ((ConcretePlayer) p).addConcretePiece(this);
     }
+
     public ConcretePiece(Player p, int index) {
         owner = p;
         id = index;
-
+        ((ConcretePlayer) p).addConcretePiece(this);
     }
-    public ArrayList<Position> getPositionsArrayList() {
-        return positionsArrayList;
+
+    public ConcretePiece(Player p, int index, String t) {
+        owner = p;
+        id = index;
+        type = t;
+        ((ConcretePlayer) p).addConcretePiece(this);
     }
 
     public ConcretePiece(Player p, int index, Position pos, String t) {
@@ -28,12 +34,18 @@ public abstract class ConcretePiece implements Piece {
         type = t;
         ((ConcretePlayer) p).addConcretePiece(this);
     }
+
+    public ArrayList<Position> getPositionsArrayList() {
+        return positionsArrayList;
+    }
+
+
     @Override
     public Player getOwner() {
         return owner;
     }
 
-    private void add_squares(int append) {
+    public void add_squares(int append) {
         squares += append;
         steps++;
     }
@@ -45,6 +57,7 @@ public abstract class ConcretePiece implements Piece {
     private void add_position_to_list(Position p) {
         positionsArrayList.add(p);
     }
+
     private void calcSquares(Position p) {
         int x_diff = Math.abs(p.GetX() - positionsArrayList.getLast().GetX());
         int y_diff = Math.abs(p.GetY() - positionsArrayList.getLast().GetY());
@@ -56,21 +69,24 @@ public abstract class ConcretePiece implements Piece {
     public int getId() {
         return id;
     }
+
     @Override
     public String toString() {
-        return id + ": " + positionsArrayList.toString();
+        return id + ": ";
     }
 
     public boolean isPawn() {
-        return this.type.equals("♙");
+        return this instanceof Pawn;
     }
 
     public boolean isKing() {
-        return this.type.equals("♔");
+        return this instanceof King;
     }
+
     public int getSteps() {
         return steps;
     }
+
     public int getSquares() {
         return squares;
     }
