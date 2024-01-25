@@ -671,7 +671,9 @@ public class GameLogic implements PlayableLogic {
         Pawn[] arrOfPawns = getArrayOfPawns(player1.get_pieces(), player2.get_pieces());
         Arrays.sort(arrOfPawns, new SortByKills());
         for (int i = 0; i < 36; i++) {
-            System.out.println(arrOfPawns[i].getOwner().toString() + arrOfPawns[i].getId() + ": " + arrOfPawns[i].getKills() + " kills");
+            if (arrOfPawns[i].getKills() > 0) {
+                System.out.println(arrOfPawns[i].getOwner().toString() + arrOfPawns[i].getId() + ": " + arrOfPawns[i].getKills() + " kills");
+            }
         }
         printStars();
     }
