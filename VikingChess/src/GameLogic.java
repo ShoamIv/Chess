@@ -195,6 +195,7 @@ public class GameLogic implements PlayableLogic {
         IsCorner(b);
         CheckSurrounding(b);
         turns++;
+        isGameFinished();
         return true;
     }
 
@@ -202,11 +203,6 @@ public class GameLogic implements PlayableLogic {
         _board[b.GetX()][b.GetY()] = (ConcretePiece) piece;
         _board[a.GetX()][a.GetY()] = null;
         addPosition(b, (ConcretePiece) piece);
-//        if (piece.getOwner().isPlayerOne()) {
-//            addPositionToArrayList(b, ((ConcretePiece) piece).getId() - 1);
-//        } else {
-//            addPositionToArrayList(b, ((ConcretePiece) piece).getId() + 12);
-//        }
     }
 
     private void addPositionToArrayList(Position p, int id) {
