@@ -211,22 +211,24 @@ public class GameLogic implements PlayableLogic {
 
     private void addPosition(Position p, ConcretePiece concretePiece) {
         if (concretePiece.getOwner().isPlayerOne()) {
-            addSquares(concretePiece, calcSquares(positionsArrayList[concretePiece.getId()-1].getLast(), p));
-            addPositionToArrayList(p, concretePiece.getId()-1);
+            addSquares(concretePiece, calcSquares(positionsArrayList[concretePiece.getId() - 1].getLast(), p));
+            addPositionToArrayList(p, concretePiece.getId() - 1);
             positions[p.GetX()][p.GetY()].set_pieces(concretePiece.getId());
         } else {
-            addSquares(concretePiece, calcSquares(positionsArrayList[concretePiece.getId()+12].getLast(), p));
-            addPositionToArrayList(p, concretePiece.getId()+12);
+            addSquares(concretePiece, calcSquares(positionsArrayList[concretePiece.getId() + 12].getLast(), p));
+            addPositionToArrayList(p, concretePiece.getId() + 12);
             positions[p.GetX()][p.GetY()].set_pieces(concretePiece.getId() + 13);
         }
     }
-    private void addSquares(ConcretePiece concretePiece, int squares){
+
+    private void addSquares(ConcretePiece concretePiece, int squares) {
         concretePiece.add_squares(squares);
     }
-    private int calcSquares(Position src, Position dst){
+
+    private int calcSquares(Position src, Position dst) {
         int x_diff = Math.abs(src.GetX() - dst.GetX());
         int y_diff = Math.abs(src.GetY() - dst.GetY());
-        return (x_diff+y_diff);
+        return (x_diff + y_diff);
     }
 
     private ArrayList<Position> steppedPositions() {
@@ -612,6 +614,10 @@ public class GameLogic implements PlayableLogic {
         printStatsByPieces();
     }
 
+    private void printStars() {
+        System.out.println("***************************************************************************");
+    }
+
     private void printStatsBySteps(Player w, Player l) {
         ConcretePiece[] copyW = copyArrayOfConcretePiece(((ConcretePlayer) w).get_pieces());
         Arrays.sort(copyW, new SortBySteps());
@@ -619,19 +625,37 @@ public class GameLogic implements PlayableLogic {
         Arrays.sort(copyL, new SortBySteps());
         if (w.isPlayerOne()) {
             for (int i = 0; i < 13; i++) {
-                System.out.println("D" + copyW[i].toString() + positionsArrayList[copyW[i].getId()-1].toString());
+                if (copyW[i].getSteps() >= 1) {
+                    if (copyW[i].isKing()) {
+                        System.out.println("K" + copyW[i].toString() + positionsArrayList[copyW[i].getId() - 1].toString());
+                    } else {
+                        System.out.println("D" + copyW[i].toString() + positionsArrayList[copyW[i].getId() - 1].toString());
+                    }
+                }
+
             }
             for (int i = 0; i < 24; i++) {
-                System.out.println("A" + copyL[i].toString() + positionsArrayList[copyL[i].getId()+12].toString());
+                if (copyL[i].getSteps() >= 1) {
+                    System.out.println("A" + copyL[i].toString() + positionsArrayList[copyL[i].getId() + 12].toString());
+                }
             }
         } else {
             for (int i = 0; i < 24; i++) {
-                System.out.println("A" + copyW[i].toString() + positionsArrayList[copyW[i].getId()+12].toString());
+                if (copyW[i].getSteps() >= 1) {
+                    System.out.println("A" + copyW[i].toString() + positionsArrayList[copyW[i].getId() + 12].toString());
+                }
             }
             for (int i = 0; i < 13; i++) {
-                System.out.println("D" + copyL[i].toString() + positionsArrayList[copyL[i].getId()-1].toString());
+                if (copyL[i].getSteps() >= 1) {
+                    if (copyL[i].isKing()) {
+                        System.out.println("K" + copyL[i].toString() + positionsArrayList[copyL[i].getId() - 1].toString());
+                    } else {
+                        System.out.println("D" + copyL[i].toString() + positionsArrayList[copyL[i].getId() - 1].toString());
+                    }
+                }
             }
         }
+        printStars();
     }
 
     private ConcretePiece[] copyArrayOfConcretePiece(ConcretePiece[] concretePieces) {
@@ -649,6 +673,7 @@ public class GameLogic implements PlayableLogic {
         for (int i = 0; i < 36; i++) {
             System.out.println(arrOfPawns[i].getOwner().toString() + arrOfPawns[i].getId() + ": " + arrOfPawns[i].getKills() + " kills");
         }
+        printStars();
     }
 
     private Pawn[] getArrayOfPawns(ConcretePiece[] player1, ConcretePiece[] player2) {
@@ -672,7 +697,7 @@ public class GameLogic implements PlayableLogic {
         for (int i = 0; i < 36; i++) {
             System.out.println(arrayOfConcretePieces[i].getOwner().toString() + arrayOfConcretePieces[i].getId() + ": " + arrayOfConcretePieces[i].getSquares() + " squares");
         }
-
+        printStars();
     }
 
     private ConcretePiece[] getArrayOfConcretePieces(ConcretePiece[] player1, ConcretePiece[] player2) {
@@ -694,5 +719,6 @@ public class GameLogic implements PlayableLogic {
             Position position = iterator.next();
             System.out.println(position.toString() + position.get_pieces() + " pieces");
         }
+        printStars();
     }
 }

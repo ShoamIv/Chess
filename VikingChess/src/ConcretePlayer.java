@@ -30,7 +30,6 @@ public class ConcretePlayer  implements Player {
         }else {
             addKing((King) concretePiece);
         }
-     //   System.out.println(concretePiece.toString() + "added successfully");
     }
     private void addPawn(Pawn pawn){
         _pieces[pawn.getId() - 1] = pawn;
