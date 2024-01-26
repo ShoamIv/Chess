@@ -67,14 +67,14 @@ class SortByPieces implements Comparator<Position> {
     @Override
     public int compare(Position p1, Position p2) {
         if (p1.get_pieces() > p2.get_pieces()) {
-            return 1;
+            return -1;
         } else {
             if (p1.get_pieces() == p2.get_pieces()) {
                 if (p1.GetX() > p2.GetX()) {
                     return 1;
                 } else {
                     if (p1.GetX() == p2.GetX()) {
-                        if (p1.GetY() > p2.GetY()) {
+                        if (p1.GetY()> p2.GetY()) {
                             return 1;
                         }
                         return -1;
@@ -82,7 +82,7 @@ class SortByPieces implements Comparator<Position> {
                     return -1;
                 }
             }
-            return -1;
+            return 1;
         }
     }
 }

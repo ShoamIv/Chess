@@ -121,15 +121,15 @@ class SortBySquares implements Comparator<ConcretePiece> {
      */
     @Override
     public int compare(ConcretePiece p1, ConcretePiece p2) {
-        if (p1.getSquares() > p2.getSquares()) {
+        if (p1.getSquares() < p2.getSquares()) {
             return 1;
         } else {
             if (p1.getSquares() == p2.getSquares()) {
-                if (p1.getId() < p2.getId()) {
+                if (p1.getId() > p2.getId()) {
                     return 1;
                 } else {
                     if (p1.getId() == p2.getId()) {
-                        if (p1.getWins() > p2.getWins()) {
+                        if (p1.getWins() < p2.getWins()) {
                             return 1;
                         }
                         return -1;
