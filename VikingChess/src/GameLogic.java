@@ -10,6 +10,7 @@ public class GameLogic implements PlayableLogic {
     private final Position Corner4 = new Position(10, 10);
     private int turns;
     private boolean gameover;
+    private int stats=0;
     private final ConcretePlayer player1 = new ConcretePlayer(true);
     private final ConcretePlayer player2 = new ConcretePlayer(false);
     private Position[][] positions = new Position[11][11];
@@ -38,6 +39,7 @@ public class GameLogic implements PlayableLogic {
         setPositionsArrayList();
         setPositions();
         setBoard2DArr();
+        stats=0;
     }
 
     private void initArrayList() {
@@ -211,8 +213,6 @@ public class GameLogic implements PlayableLogic {
         CheckSurrounding(b);
         turns++;
         isGameFinished();
-        int k=positions[b.GetX()][b.GetY()].get_pieces();
- //      System.out.println("pieces steps:"+k);
         return true;
     }
 
@@ -589,12 +589,19 @@ public class GameLogic implements PlayableLogic {
         if (gameover) {
             if (isSecondPlayerTurn()) {
                 player1.IncreaseWins();
-                printStats(player1, player2);
+                if (stats==0) {
+                    printStats(player1, player2);
+                    stats++;
+                }
                 return gameover;
-            }
+            }else{
             player2.IncreaseWins();
-            printStats(player2, player1);
+            if(stats==0) {
+                printStats(player2, player1);
+                stats++;
+            }
             return gameover;
+            }
         }
         return false;
     }
