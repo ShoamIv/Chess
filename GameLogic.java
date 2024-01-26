@@ -189,20 +189,20 @@ public class GameLogic implements PlayableLogic {
         if (!isSecondPlayerTurn() && !getPieceAtPosition(a).getOwner().isPlayerOne()) {
             return false;
         }
-        // System.out.println(_board[a.GetX()][a.GetY()].getOwner().toString() + ":(" + b.GetX() + "," + b.GetY() + ")");
         Piece piece = getPieceAtPosition(a);
         ChangePosition(piece, a, b);
         IsCorner(b);
         CheckSurrounding(b);
         turns++;
         isGameFinished();
+      //  System.out.println(_board[b.GetX()][b.GetY()].getOwner().toString() +(_board[b.GetX()][b.GetY()].getId())+ ":(" + b.GetX() + "," + b.GetY() + ")"+ "sqaures:"+(_board[b.GetX()][b.GetY()].getSquares()));
         return true;
     }
 
     private void ChangePosition(Piece piece, Position a, Position b) {
+        addPosition(b, (ConcretePiece) piece);
         _board[b.GetX()][b.GetY()] = (ConcretePiece) piece;
         _board[a.GetX()][a.GetY()] = null;
-        addPosition(b, (ConcretePiece) piece);
     }
 
     private void addPositionToArrayList(Position p, int id) {
@@ -692,7 +692,7 @@ public class GameLogic implements PlayableLogic {
     private void printStatsBySquares() {
         ConcretePiece[] arrayOfConcretePieces = getArrayOfConcretePieces(player1.get_pieces(), player2.get_pieces());
         Arrays.sort(arrayOfConcretePieces, new SortBySquares());
-        for (int i = 0; i < 36; i++) {
+        for (int i = 0; i <= 36; i++) {
             if(arrayOfConcretePieces[i].getSquares()!=0) {
                 System.out.println(arrayOfConcretePieces[i].getOwner().toString() + arrayOfConcretePieces[i].getId() + ": " + arrayOfConcretePieces[i].getSquares() + " squares");
             }
