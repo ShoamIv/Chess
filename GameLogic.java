@@ -35,9 +35,9 @@ public class GameLogic implements PlayableLogic {
     public void init() {
         resetBoard();
         initArrayList();
-        setBoard2DArr();
         setPositionsArrayList();
         setPositions();
+        setBoard2DArr();
     }
 
     private void initArrayList() {
@@ -123,39 +123,55 @@ public class GameLogic implements PlayableLogic {
         for (int i = 3; i < 8; i++) {
             //p2
             _board[i][0] = new Pawn(player2, (i - 2)); // p2 1-5
+            positions[i][0].set_pieces(i+11);
             _board[i][10] = new Pawn(player2, (i + 17)); // p2 20-24
+            positions[i][10].set_pieces(i+30);
             if (i < 5) {
                 if (i == 3) {
                     _board[i + 2][i] = new Pawn(player1, (i - 2));// p1 1
+                    positions[i+2][i].set_pieces(i-2);
                     _board[i + 2][i + 4] = new Pawn(player1, (i + 10));// p1 13
+                    positions[i + 2][i + 4].set_pieces(i+23);
                 }
                 if (i == 4) {
                     for (int j = 2; j < 5; j++) {
                         _board[j + 2][i] = new Pawn(player1, (j));// p1 2-4
+                        positions[j + 2][i].set_pieces(j);
                         _board[j + 2][i + 2] = new Pawn(player1, (j + 8));// p1 10-12
+                        positions[j + 2][i+2].set_pieces(j+8);
                     }
                 }
                 _board[0][i] = new Pawn(player2, (2 * i) + 1);// p2 7, 9
+                positions[0][i].set_pieces(2*i+14);
                 _board[10][i] = new Pawn(player2, (2 * i) + 2);// p2 8,10
+                positions[10][i].set_pieces(2*i+15);
             }
             if (i == 5) {
                 for (int j = 5; j < 10; j++) {
                     if (j != 7) {// p1 5-9
                         _board[j - 2][i] = new Pawn(player1, j);
+                        positions[j-2][i].set_pieces(j);
                     } else {
                         _board[j - 2][i] = new King(player1, j);
+                        positions[j-2][i].set_pieces(j);
                     }
                 }
                 _board[i][1] = new Pawn(player2, i + 1);// p2 6
+                positions[i][1].set_pieces(i+14);
                 _board[i][9] = new Pawn(player2, i + 14);// p2 19
+                positions[i][9].set_pieces(i+27);
                 for (int j = 0; j < 2; j++) {
                     _board[j][i] = new Pawn(player2, j + 11);// p2 11, 12
+                    positions[j][i].set_pieces(j+24);
                     _board[j + 9][i] = new Pawn(player2, j + 13);// p2 13, 14
+                    positions[j+9][i].set_pieces(j+26);
                 }
             }
             if (i > 5) {
                 _board[0][i] = new Pawn(player2, (2 * i) + 3);// p2 15, 17
+                positions[0][i].set_pieces(2*i+16);
                 _board[10][i] = new Pawn(player2, (2 * i) + 4);// p2 16, 18
+                positions[10][i].set_pieces(2*i+17);
             }
         }
     }
@@ -195,7 +211,8 @@ public class GameLogic implements PlayableLogic {
         CheckSurrounding(b);
         turns++;
         isGameFinished();
-      //  System.out.println(_board[b.GetX()][b.GetY()].getOwner().toString() +(_board[b.GetX()][b.GetY()].getId())+ ":(" + b.GetX() + "," + b.GetY() + ")"+ "sqaures:"+(_board[b.GetX()][b.GetY()].getSquares()));
+        int k=positions[b.GetX()][b.GetY()].get_pieces();
+ //      System.out.println("pieces steps:"+k);
         return true;
     }
 
@@ -693,9 +710,12 @@ public class GameLogic implements PlayableLogic {
         ConcretePiece[] arrayOfConcretePieces = getArrayOfConcretePieces(player1.get_pieces(), player2.get_pieces());
         Arrays.sort(arrayOfConcretePieces, new SortBySquares());
         for (int i = 0; i <= 36; i++) {
+            if(arrayOfConcretePieces[i].isKing()){
+                System.out.println("K"+ arrayOfConcretePieces[i].getId() + ": " + arrayOfConcretePieces[i].getSquares() + " squares");
+            }else{
             if(arrayOfConcretePieces[i].getSquares()!=0) {
                 System.out.println(arrayOfConcretePieces[i].getOwner().toString() + arrayOfConcretePieces[i].getId() + ": " + arrayOfConcretePieces[i].getSquares() + " squares");
-            }
+            }}
             }
         printStars();
     }
