@@ -1,6 +1,9 @@
 import java.util.ArrayList;
 import java.util.Arrays;
-import java.util.Iterator;
+/**
+ * GameLogic implemets PlayableLogic.
+ *GameLogic responsible for the Chess-like game.
+ **/
 
 public class GameLogic implements PlayableLogic {
     ConcretePiece[][] _board = new ConcretePiece[getBoardSize()][getBoardSize()];
@@ -10,7 +13,7 @@ public class GameLogic implements PlayableLogic {
     private final Position Corner4 = new Position(10, 10);
     private int turns;
     private boolean gameover;
-    private int stats=0;
+    private int stats = 0;
     private final ConcretePlayer player1 = new ConcretePlayer(true);
     private final ConcretePlayer player2 = new ConcretePlayer(false);
     private Position[][] positions = new Position[11][11];
@@ -23,15 +26,13 @@ public class GameLogic implements PlayableLogic {
         turns = 0;
         init();
     }
+
     /**
-     Initiating the game:
-     *False init to false
-     *Set Pieces on the board as required
-     */
-    /**
-     * Initiating the game:
-     * False init to false
-     * Set Pieces on the board as required
+     *  Initiating the game:
+     *  First reset the board.
+     *  Initiaing the Lists we need to this Class.
+     *  Set the pieces on the board.
+     *  global int stats into zero.
      */
     public void init() {
         resetBoard();
@@ -39,7 +40,7 @@ public class GameLogic implements PlayableLogic {
         setPositionsArrayList();
         setPositions();
         setBoard2DArr();
-        stats=0;
+        stats = 0;
     }
 
     private void initArrayList() {
@@ -48,7 +49,7 @@ public class GameLogic implements PlayableLogic {
         }
     }
 
-    private void resetBoard() {         //first,Set pieces to null and game-state to false.
+    private void resetBoard() {
         turns = 0;
         gameover = false;
         for (int i = 0; i < 11; i++) {
@@ -125,55 +126,55 @@ public class GameLogic implements PlayableLogic {
         for (int i = 3; i < 8; i++) {
             //p2
             _board[i][0] = new Pawn(player2, (i - 2)); // p2 1-5
-            positions[i][0].set_pieces(i+11);
+            positions[i][0].set_pieces(i + 11);
             _board[i][10] = new Pawn(player2, (i + 17)); // p2 20-24
-            positions[i][10].set_pieces(i+30);
+            positions[i][10].set_pieces(i + 30);
             if (i < 5) {
                 if (i == 3) {
                     _board[i + 2][i] = new Pawn(player1, (i - 2));// p1 1
-                    positions[i+2][i].set_pieces(i-2);
+                    positions[i + 2][i].set_pieces(i - 2);
                     _board[i + 2][i + 4] = new Pawn(player1, (i + 10));// p1 13
-                    positions[i + 2][i + 4].set_pieces(i+23);
+                    positions[i + 2][i + 4].set_pieces(i + 23);
                 }
                 if (i == 4) {
                     for (int j = 2; j < 5; j++) {
                         _board[j + 2][i] = new Pawn(player1, (j));// p1 2-4
                         positions[j + 2][i].set_pieces(j);
                         _board[j + 2][i + 2] = new Pawn(player1, (j + 8));// p1 10-12
-                        positions[j + 2][i+2].set_pieces(j+8);
+                        positions[j + 2][i + 2].set_pieces(j + 8);
                     }
                 }
                 _board[0][i] = new Pawn(player2, (2 * i) + 1);// p2 7, 9
-                positions[0][i].set_pieces(2*i+14);
+                positions[0][i].set_pieces(2 * i + 14);
                 _board[10][i] = new Pawn(player2, (2 * i) + 2);// p2 8,10
-                positions[10][i].set_pieces(2*i+15);
+                positions[10][i].set_pieces(2 * i + 15);
             }
             if (i == 5) {
                 for (int j = 5; j < 10; j++) {
                     if (j != 7) {// p1 5-9
                         _board[j - 2][i] = new Pawn(player1, j);
-                        positions[j-2][i].set_pieces(j);
+                        positions[j - 2][i].set_pieces(j);
                     } else {
                         _board[j - 2][i] = new King(player1, j);
-                        positions[j-2][i].set_pieces(j);
+                        positions[j - 2][i].set_pieces(j);
                     }
                 }
                 _board[i][1] = new Pawn(player2, i + 1);// p2 6
-                positions[i][1].set_pieces(i+14);
+                positions[i][1].set_pieces(i + 14);
                 _board[i][9] = new Pawn(player2, i + 14);// p2 19
-                positions[i][9].set_pieces(i+27);
+                positions[i][9].set_pieces(i + 27);
                 for (int j = 0; j < 2; j++) {
                     _board[j][i] = new Pawn(player2, j + 11);// p2 11, 12
-                    positions[j][i].set_pieces(j+24);
+                    positions[j][i].set_pieces(j + 24);
                     _board[j + 9][i] = new Pawn(player2, j + 13);// p2 13, 14
-                    positions[j+9][i].set_pieces(j+26);
+                    positions[j + 9][i].set_pieces(j + 26);
                 }
             }
             if (i > 5) {
                 _board[0][i] = new Pawn(player2, (2 * i) + 3);// p2 15, 17
-                positions[0][i].set_pieces(2*i+16);
+                positions[0][i].set_pieces(2 * i + 16);
                 _board[10][i] = new Pawn(player2, (2 * i) + 4);// p2 16, 18
-                positions[10][i].set_pieces(2*i+17);
+                positions[10][i].set_pieces(2 * i + 17);
             }
         }
     }
@@ -186,7 +187,7 @@ public class GameLogic implements PlayableLogic {
      * Move checks if it is the player(i) turn (i=1/2).
      * If all condition to move is legal, move change the position of the piece.
      * Move summon CheckSurrounding and IsCorner to execute "kiils" if reuqired.
-     *
+     *update the turns to keep track of who's turn it is.
      * @param a The starting position of the piece.
      * @param b The destination position for the piece.
      * @return if the piece has moved return true, else false.
@@ -207,7 +208,7 @@ public class GameLogic implements PlayableLogic {
         if (!isSecondPlayerTurn() && !getPieceAtPosition(a).getOwner().isPlayerOne()) {
             return false;
         }
-        Piece piece = getPieceAtPosition(a);
+        ConcretePiece piece = getPieceAtPosition(a);
         ChangePosition(piece, a, b);
         IsCorner(b);
         CheckSurrounding(b);
@@ -216,16 +217,27 @@ public class GameLogic implements PlayableLogic {
         return true;
     }
 
-    private void ChangePosition(Piece piece, Position a, Position b) {
-        addPosition(b, (ConcretePiece) piece);
-        _board[b.GetX()][b.GetY()] = (ConcretePiece) piece;
+    /**
+     * first, add position b to Position List.
+     * update the board.
+     * @param piece
+     * @param a
+     * @param b
+     */
+    private void ChangePosition(ConcretePiece piece, Position a, Position b) {
+        addPosition(b, piece);
+        _board[b.GetX()][b.GetY()] = piece;
         _board[a.GetX()][a.GetY()] = null;
     }
-
     private void addPositionToArrayList(Position p, int id) {
         positionsArrayList[id].add(p);
     }
 
+    /**
+     * add the required information for the comparators to the Lists.
+     * @param p
+     * @param concretePiece
+     */
     private void addPosition(Position p, ConcretePiece concretePiece) {
         if (concretePiece.getOwner().isPlayerOne()) {
             addSquares(concretePiece, calcSquares(positionsArrayList[concretePiece.getId() - 1].getLast(), p));
@@ -260,6 +272,13 @@ public class GameLogic implements PlayableLogic {
         return steppedPositionsArrayList;
     }
 
+    /**
+     * Ensure that the path from a to b is legal
+     * if the path is not legal return false.
+     * @param a
+     * @param b
+     * @return
+     */
     private boolean ValidPath(Position a, Position b) {
         if (!_board[a.GetX()][a.GetY()].isKing()) {
             if (b.Equalto(Corner1)) return false;
@@ -304,6 +323,12 @@ public class GameLogic implements PlayableLogic {
         return true;
     }
 
+    /**
+     *  Validate to the king go the corners.
+     * @param a
+     * @param b
+     * @return
+     */
     private boolean ValidCornerKing(Position a, Position b) {
         if (_board[a.GetX()][a.GetY()].isKing()) {
             if (b.Equalto(Corner1)) return true;
@@ -316,12 +341,20 @@ public class GameLogic implements PlayableLogic {
 
     private void addEat(Position a) {
         ((Pawn) _board[a.GetX()][a.GetY()]).kill();
-        ((ConcretePlayer) ((Pawn) _board[a.GetX()][a.GetY()]).getOwner()).addConcretePiece(_board[a.GetX()][a.GetY()]);
+        _board[a.GetX()][a.GetY()].getOwner().addConcretePiece(_board[a.GetX()][a.GetY()]);
     }
 
+    /**
+     * The main functions that control the kill process in the game.
+     *First check if the piece at Position a is king, if it is return.
+     * Checks all 4 directions of the game:
+     * East: X+1, West:X-1, South=Y+1, North=Y-1.
+     * each direction checked separate.
+     * using helper functions in order to maintain the OOP principles.
+     * @param a
+     */
     private void CheckSurrounding(Position a) {
-        Player p = _board[a.GetX()][a.GetY()].getOwner();
-        //Cannot Eat with King.
+        ConcretePlayer p = _board[a.GetX()][a.GetY()].getOwner();
         if (_board[a.GetX()][a.GetY()].isKing()) return;
         else if (CheckEast(a, p)) {
             if (_board[a.GetX() + 1][a.GetY()] != null) {
@@ -376,7 +409,8 @@ public class GameLogic implements PlayableLogic {
                     else {
                         return true;
                     }
-                } else return _board[a.GetX() + 2][a.GetY()] != null && _board[a.GetX() + 2][a.GetY()].getOwner() == p;
+                } else
+                    return _board[a.GetX() + 2][a.GetY()] != null && _board[a.GetX() + 2][a.GetY()].getOwner() == p && _board[a.GetX() + 2][a.GetY()].isPawn();
             }
         }
         return false;
@@ -393,7 +427,8 @@ public class GameLogic implements PlayableLogic {
                     else {
                         return true;
                     }
-                } else return _board[a.GetX() - 2][a.GetY()] != null && _board[a.GetX() - 2][a.GetY()].getOwner() == p;
+                } else
+                    return _board[a.GetX() - 2][a.GetY()] != null && _board[a.GetX() - 2][a.GetY()].getOwner() == p && _board[a.GetX() - 2][a.GetY()].isPawn();
             }
         }
         return false;
@@ -411,7 +446,7 @@ public class GameLogic implements PlayableLogic {
                         return true;
                     }
                 } else {
-                    return _board[a.GetX()][a.GetY() - 2] != null && (_board[a.GetX()][a.GetY() - 2].getOwner() == p);
+                    return _board[a.GetX()][a.GetY() - 2] != null && (_board[a.GetX()][a.GetY() - 2].getOwner() == p) && _board[a.GetX()][a.GetY() - 2].isPawn();
                 }
             }
         }
@@ -430,97 +465,142 @@ public class GameLogic implements PlayableLogic {
                         return true;
                     }
                 } else
-                    return _board[a.GetX()][a.GetY() + 2] != null && _board[a.GetX()][a.GetY() + 2].getOwner() == p;
+                    return _board[a.GetX()][a.GetY() + 2] != null && _board[a.GetX()][a.GetY() + 2].getOwner() == p && _board[a.GetX()][a.GetY() + 2].isPawn();
             }
         }
         return false;
     }
 
+    /**
+     * as CheckSurrounding role, but this function handle the Corner cases.
+     * @param a
+     */
     private void IsCorner(Position a) {
         if (_board[a.GetX()][a.GetY()].isKing()) return;
         Player p = _board[a.GetX()][a.GetY()].getOwner();
         if ((a.GetX() == 10 && a.GetY() == 2) || (a.GetX() == 8 && a.GetY() == 0)) {
-            NorthEastCorner(a, p);
+            boolean kill = NorthEastCorner(a, p);
+            if (kill) addEat(a);
             return;
         }
         if ((a.GetX() == 0 && a.GetY() == 2) || (a.GetX() == 2 && a.GetY() == 0)) {
-            NorthWestCorner(a, p);
+            boolean kill = NorthWestCorner(a, p);
+            if (kill) addEat(a);
             return;
         }
         if ((a.GetX() == 8 && a.GetY() == 10) || (a.GetX() == 10 && a.GetY() == 8)) {
-            SouthEastCorner(a, p);
+            boolean kill = SouthEastCorner(a, p);
+            if (kill) addEat(a);
             return;
         }
         if ((a.GetX() == 0 && a.GetY() == 8) || (a.GetX() == 2 && a.GetY() == 10)) {
-            SouthWestCorner(a, p);
+            boolean kill = SouthWestCorner(a, p);
+            if (kill) addEat(a);
         }
     }
 
-    private void NorthEastCorner(Position a, Player p) {
+    private boolean NorthEastCorner(Position a, Player p) {
         if (a.GetY() == 2) {
             if (_board[a.GetX()][a.GetY() - 1] != null) {
                 if (_board[a.GetX()][a.GetY() - 1].getOwner() != p) {
-                    if (_board[a.GetX()][a.GetY() - 1].isKing()) return;
-                    _board[a.GetX()][a.GetY() - 1] = null;
+                    if (_board[a.GetX()][a.GetY() - 1].isKing()) return false;
+                    else {
+                        _board[a.GetX()][a.GetY() - 1] = null;
+                        return true;
+                    }
                 }
             }
         } else if (_board[a.GetX() + 1][a.GetY()] != null) {
             if (_board[a.GetX() + 1][a.GetY()].getOwner() != p) {
-                if (_board[a.GetX() + 1][a.GetY()].isKing()) return;
-                _board[a.GetX() + 1][a.GetY()] = null;
+                if (_board[a.GetX() + 1][a.GetY()].isKing()) return false;
+                else {
+                    _board[a.GetX() + 1][a.GetY()] = null;
+                    return true;
+                }
             }
         }
+        return false;
     }
 
-    private void NorthWestCorner(Position a, Player p) {
+    private boolean NorthWestCorner(Position a, Player p) {
         if (a.GetY() == 2) {
             if (_board[a.GetX()][a.GetY() - 1] != null) {
                 if (_board[a.GetX()][a.GetY() - 1].getOwner() != p) {
-                    if (_board[a.GetX()][a.GetY() - 1].isKing()) return;
-                    _board[a.GetX()][a.GetY() - 1] = null;
+                    if (_board[a.GetX()][a.GetY() - 1].isKing()) return false;
+                    else {
+                        _board[a.GetX()][a.GetY() - 1] = null;
+                        return true;
+                    }
                 }
             }
         } else if (_board[a.GetX() - 1][a.GetY()] != null) {
             if (_board[a.GetX() - 1][a.GetY()].getOwner() != p) {
-                if (_board[a.GetX() - 1][a.GetY()].isKing()) return;
-                _board[a.GetX() - 1][a.GetY()] = null;
+                if (_board[a.GetX() - 1][a.GetY()].isKing()) return false;
+                else {
+                    _board[a.GetX() - 1][a.GetY()] = null;
+                    return true;
+                }
             }
         }
+        return false;
     }
 
-    private void SouthEastCorner(Position a, Player p) {
+    private boolean SouthEastCorner(Position a, Player p) {
         if (a.GetY() == 8) {
             if (_board[a.GetX()][a.GetY() + 1] != null) {
                 if (_board[a.GetX()][a.GetY() + 1].getOwner() != p) {
-                    if (_board[a.GetX()][a.GetY() + 1].isKing()) return;
-                    _board[a.GetX()][a.GetY() + 1] = null;
+                    if (_board[a.GetX()][a.GetY() + 1].isKing()) return false;
+                    else {
+                        _board[a.GetX()][a.GetY() + 1] = null;
+                        return true;
+                    }
                 }
             }
         } else if (_board[a.GetX() + 1][a.GetY()] != null) {
             if (_board[a.GetX() + 1][a.GetY()].getOwner() != p) {
-                if (_board[a.GetX() + 1][a.GetY()].isKing()) return;
-                _board[a.GetX() + 1][a.GetY()] = null;
+                if (_board[a.GetX() + 1][a.GetY()].isKing()) return false;
+                else {
+                    _board[a.GetX() + 1][a.GetY()] = null;
+                    return true;
+                }
             }
         }
+        return false;
     }
 
-    private void SouthWestCorner(Position a, Player p) {
+    private boolean SouthWestCorner(Position a, Player p) {
         if (a.GetX() == 0) {
             if (_board[a.GetX()][a.GetY() + 1] != null) {
                 if (_board[a.GetX()][a.GetY() + 1].getOwner() != p) {
-                    if (_board[a.GetX()][a.GetY() + 1].isKing()) return;
-                    _board[a.GetX()][a.GetY() + 1] = null;
+                    if (_board[a.GetX()][a.GetY() + 1].isKing()) return false;
+                    else {
+                        _board[a.GetX()][a.GetY() + 1] = null;
+                        return true;
+                    }
                 }
             }
         } else if (_board[a.GetX() - 1][a.GetY()] != null) {
             if (_board[a.GetX() - 1][a.GetY()].getOwner() != p) {
-                if (_board[a.GetX() - 1][a.GetY()].isKing()) return;
-                _board[a.GetX() - 1][a.GetY()] = null;
+                if (_board[a.GetX() - 1][a.GetY()].isKing()) return false;
+                else {
+                    _board[a.GetX() - 1][a.GetY()] = null;
+                    return true;
+                }
             }
         }
+        return false;
     }
 
-    private boolean EatKing(Position King, Player p) {
+    /**
+     *  This function checks if King is being eaten.
+     *  if the King is on edge, calls for EatEdgeKing that check the Edge case
+     *  if the king is being eaten, the function return true to the boolean gameover.
+     *  once gameover is true, the game is over.
+     * @param King
+     * @param p
+     * @return
+     */
+    private boolean EatKing(Position King, ConcretePlayer p) {
         if (King.GetX() == 0 || King.GetX() == 10 || King.GetY() == 0 || King.GetY() == 10) {
             return EatEdgeKing(King, p);
         }
@@ -528,79 +608,85 @@ public class GameLogic implements PlayableLogic {
         if (_board[King.GetX() + 1][King.GetY()] != null && _board[King.GetX() - 1][King.GetY()] != null && _board[King.GetX()][King.GetY() + 1] != null && _board[King.GetX()][King.GetY() - 1] != null) {
             if (_board[King.GetX() + 1][King.GetY()].getOwner() == p && _board[King.GetX() - 1][King.GetY()].getOwner() == p && _board[King.GetX()][King.GetY() + 1].getOwner() == p && _board[King.GetX()][King.GetY() - 1].getOwner() == p) {
                 _board[King.GetX()][King.GetY()] = null;
+                return true;
             }
-            gameover = true;
-            return true;
-        } else {
-            return false;
         }
+        return false;
     }
 
+    /**
+     * as written the EatKing,  checks the case where King is on edge.
+     * @param King
+     * @param p
+     * @return
+     */
     private boolean EatEdgeKing(Position King, Player p) {
         if (King.GetX() == 0 && _board[King.GetX() + 1][King.GetY()] != null && _board[King.GetX()][King.GetY() + 1] != null && _board[King.GetX()][King.GetY() - 1] != null) {
             if (King.GetX() == 0 && _board[King.GetX() + 1][King.GetY()].getOwner() == p && _board[King.GetX()][King.GetY() + 1].getOwner() == p && _board[King.GetX()][King.GetY() - 1].getOwner() == p) {
                 _board[King.GetX()][King.GetY()] = null;
-                gameover = true;
                 return true;
             }
         }
         if (King.GetX() == 10 && _board[King.GetX() - 1][King.GetY()] != null && _board[King.GetX()][King.GetY() + 1] != null && _board[King.GetX()][King.GetY() - 1] != null) {
             if (_board[King.GetX() - 1][King.GetY()].getOwner() == p && _board[King.GetX()][King.GetY() + 1].getOwner() == p && _board[King.GetX()][King.GetY() - 1].getOwner() == p) {
                 _board[King.GetX()][King.GetY()] = null;
-                gameover = true;
                 return true;
             }
         }
         if (King.GetY() == 0 && _board[King.GetX() + 1][King.GetY()] != null && _board[King.GetX() - 1][King.GetY()] != null && _board[King.GetX()][King.GetY() + 1] != null) {
             if (_board[King.GetX() + 1][King.GetY()].getOwner() == p && _board[King.GetX() - 1][King.GetY()].getOwner() == p && _board[King.GetX()][King.GetY() + 1].getOwner() == p) {
                 _board[King.GetX()][King.GetY()] = null;
-                gameover = true;
                 return true;
             }
         }
         if (King.GetY() == 10 && _board[King.GetX() + 1][King.GetY()] != null && _board[King.GetX() - 1][King.GetY()] != null && _board[King.GetX()][King.GetY() - 1] != null) {
             if (_board[King.GetX() + 1][King.GetY()].getOwner() == p && _board[King.GetX() - 1][King.GetY()].getOwner() == p && _board[King.GetX()][King.GetY() - 1].getOwner() == p) {
                 _board[King.GetX()][King.GetY()] = null;
-                gameover = true;
                 return true;
-
             }
         }
         return false;
     }
 
     @Override
-    public Piece getPieceAtPosition(Position position) {
+    public ConcretePiece getPieceAtPosition(Position position) {
         return _board[position.GetX()][position.GetY()];
     }
 
     @Override
-    public Player getFirstPlayer() {
+    public ConcretePlayer getFirstPlayer() {
         return player1;
     }
 
     @Override
-    public Player getSecondPlayer() {
+    public ConcretePlayer getSecondPlayer() {
         return player2;
     }
 
+    /**
+     * This function return true if the game is over.
+     * if it does than:
+     * increasing wins for the winning side.
+     * and print the required stats for the Comparators.
+     * @return
+     */
     @Override
     public boolean isGameFinished() {
         if (gameover) {
             if (isSecondPlayerTurn()) {
                 player1.IncreaseWins();
-                if (stats==0) {
+                if (stats == 0) {
                     printStats(player1, player2);
                     stats++;
                 }
                 return gameover;
-            }else{
-            player2.IncreaseWins();
-            if(stats==0) {
-                printStats(player2, player1);
-                stats++;
-            }
-            return gameover;
+            } else {
+                player2.IncreaseWins();
+                if (stats == 0) {
+                    printStats(player2, player1);
+                    stats++;
+                }
+                return gameover;
             }
         }
         return false;
@@ -627,21 +713,25 @@ public class GameLogic implements PlayableLogic {
         return 11;
     }
 
-    private void printStats(Player w, Player l) {
+    private void printStats(ConcretePlayer w, ConcretePlayer l) {
         printStatsBySteps(w, l);
         printStatsByKills();
         printStatsBySquares();
         printStatsByPieces();
     }
-
     private void printStars() {
         System.out.println("***************************************************************************");
     }
 
-    private void printStatsBySteps(Player w, Player l) {
-        ConcretePiece[] copyW = copyArrayOfConcretePiece(((ConcretePlayer) w).get_pieces());
+    /**
+     * Print stats according ConcretePiece Comparator: SortBySteps.
+     * @param w
+     * @param l
+     */
+    private void printStatsBySteps(ConcretePlayer w, ConcretePlayer l) {
+        ConcretePiece[] copyW = copyArrayOfConcretePiece((w).get_pieces());
         Arrays.sort(copyW, new SortBySteps());
-        ConcretePiece[] copyL = copyArrayOfConcretePiece(((ConcretePlayer) l).get_pieces());
+         ConcretePiece[] copyL = copyArrayOfConcretePiece((l).get_pieces());
         Arrays.sort(copyL, new SortBySteps());
         if (w.isPlayerOne()) {
             for (int i = 0; i < 13; i++) {
@@ -682,11 +772,19 @@ public class GameLogic implements PlayableLogic {
         int l = concretePieces.length;
         ConcretePiece[] copy = new ConcretePiece[l];
         for (int i = 0; i < l; i++) {
-            copy[i] = concretePieces[i];
+            if (concretePieces[i].isPawn()) {
+                copy[i] = (Pawn) concretePieces[i];
+            } else {
+                copy[i] = (King) concretePieces[i];
+            }
+
         }
         return copy;
     }
 
+    /**
+     * Print stats according Pawn, SortByKills Comparator
+     */
     private void printStatsByKills() {
         Pawn[] arrOfPawns = getArrayOfPawns(player1.get_pieces(), player2.get_pieces());
         Arrays.sort(arrOfPawns, new SortByKills());
@@ -713,17 +811,21 @@ public class GameLogic implements PlayableLogic {
         return arr;
     }
 
+    /**
+     * print stats according ConcretePiece, SortBySquares Comparator.
+     */
     private void printStatsBySquares() {
         ConcretePiece[] arrayOfConcretePieces = getArrayOfConcretePieces(player1.get_pieces(), player2.get_pieces());
         Arrays.sort(arrayOfConcretePieces, new SortBySquares());
         for (int i = 0; i <= 36; i++) {
-            if(arrayOfConcretePieces[i].isKing()){
-                System.out.println("K"+ arrayOfConcretePieces[i].getId() + ": " + arrayOfConcretePieces[i].getSquares() + " squares");
-            }else{
-            if(arrayOfConcretePieces[i].getSquares()!=0) {
-                System.out.println(arrayOfConcretePieces[i].getOwner().toString() + arrayOfConcretePieces[i].getId() + ": " + arrayOfConcretePieces[i].getSquares() + " squares");
-            }}
+            if (arrayOfConcretePieces[i].isKing() && arrayOfConcretePieces[i].getSquares() != 0 ) {
+                System.out.println("K" + arrayOfConcretePieces[i].getId() + ": " + arrayOfConcretePieces[i].getSquares() + " squares");
+            } else {
+                if (arrayOfConcretePieces[i].getSquares() != 0) {
+                    System.out.println(arrayOfConcretePieces[i].getOwner().toString() + arrayOfConcretePieces[i].getId() + ": " + arrayOfConcretePieces[i].getSquares() + " squares");
+                }
             }
+        }
         printStars();
     }
 
@@ -738,12 +840,13 @@ public class GameLogic implements PlayableLogic {
         return arr;
     }
 
+    /**
+     * print stats according Position, SortByPieces Comparator.
+     */
     private void printStatsByPieces() {
         ArrayList<Position> steppedPositionsArrayList = steppedPositions();
         steppedPositionsArrayList.sort(new SortByPieces());
-        Iterator<Position> iterator = steppedPositionsArrayList.iterator();
-        while (iterator.hasNext()) {
-            Position position = iterator.next();
+        for (Position position : steppedPositionsArrayList) {
             System.out.println(position.toString() + position.get_pieces() + " pieces");
         }
         printStars();

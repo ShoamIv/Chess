@@ -3,14 +3,22 @@ public class ConcretePlayer  implements Player {
     private int _win;
 
     private ConcretePiece[] _pieces;
-
+    /**
+     * Returns a string representation of the Concrete player of the format D/A according to the player's role.
+     *
+     * @return a string representation of the ConcretePiece.
+     */
     @Override
     public String toString() {
         if(_playerOne){
             return "D";
         }else return "A";
     }
-
+    /**
+     *  returns an array of the pieces aggregated by this Player.
+     *
+     * @return an array of ConcretePiece.
+     */
     public ConcretePiece[] get_pieces() {
         return _pieces;
     }
@@ -24,6 +32,9 @@ public class ConcretePlayer  implements Player {
             _pieces = new ConcretePiece[24];
         }
     }
+    /**
+     *  defines the pieces in _pieces explicitly using helper functions addPawn(), addKing()
+     */
     public void addConcretePiece(ConcretePiece concretePiece){
         if (concretePiece.isPawn()){
             addPawn((Pawn) concretePiece);

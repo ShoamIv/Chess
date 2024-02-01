@@ -2,70 +2,44 @@ import java.util.ArrayList;
 import java.util.Comparator;
 
 public abstract class ConcretePiece implements Piece {
-    private Player owner;
+    private ConcretePlayer owner;
     String type;
     private ArrayList<Position> positionsArrayList = new ArrayList<Position>(); //should be depreciated
     private int steps = 0;
     private int squares = 0;
     private int id; // save id of piece according to the figure in the assignment
 
-    public ConcretePiece(Player p) {
-        owner = p;
-        ((ConcretePlayer) p).addConcretePiece(this);
-    }
 
-    public ConcretePiece(Player p, int index) {
+    public ConcretePiece(ConcretePlayer p, int index) {
         owner = p;
         id = index;
-        ((ConcretePlayer) p).addConcretePiece(this);
+        p.addConcretePiece(this);
     }
 
-    public ConcretePiece(Player p, int index, String t) {
+    public ConcretePiece(ConcretePlayer p, int index, String t) {
         owner = p;
         id = index;
         type = t;
-        ((ConcretePlayer) p).addConcretePiece(this);
+        p.addConcretePiece(this);
     }
-
-    public ConcretePiece(Player p, int index, Position pos, String t) {
-        owner = p;
-        id = index;
-        positionsArrayList.add(pos);
-        type = t;
-        ((ConcretePlayer) p).addConcretePiece(this);
-    }
-
-    public ArrayList<Position> getPositionsArrayList() {
-        return positionsArrayList;
-    }
-
-
+    /**
+     * Get the player who owns the piece.
+     *
+     * @return The player who is the owner of this game piece.
+     */
     @Override
-    public Player getOwner() {
+    public ConcretePlayer getOwner() {
         return owner;
     }
 
+    /**
+     * add squares to squares history and update total steps (moves e.g);
+     * @param append
+     */
     public void add_squares(int append) {
         squares += append;
         steps++;
     }
-
-    public void addPosition(Position p) {
-        calcSquares(p);
-    }
-
-    private void add_position_to_list(Position p) {
-        positionsArrayList.add(p);
-    }
-
-    private void calcSquares(Position p) {
-        int x_diff = Math.abs(p.GetX() - positionsArrayList.getLast().GetX());
-        int y_diff = Math.abs(p.GetY() - positionsArrayList.getLast().GetY());
-        add_position_to_list(p);
-        add_squares(x_diff + y_diff);
-        //  printPositions();
-    }
-
     public int getId() {
         return id;
     }
@@ -113,10 +87,10 @@ class SortBySquares implements Comparator<ConcretePiece> {
      * zero, or a positive integer as the first argument is less than, equal
      * to, or greater than the second.<p>
      *
-     * @param p1 the first object to be compared.
-     * @param p2 the second object to be compared.
-     * @return a negative integer, zero, or a positive integer as the
-     * first argument is less than, equal to, or greater than the
+     * @param p1 the first ConcretePiece to be compared.
+     * @param p2 the second ConcretePiece to be compared.
+     * @return a negative integer,  or a positive integer as the
+     * first argument is less than or greater than the
      * second.
      */
     @Override
@@ -151,7 +125,18 @@ class SortBySteps implements Comparator<ConcretePiece> {
         return super.toString();
     }
 
-
+    /**
+     * This comparator sorts ConcretePiece-s according to their steps,
+     * Compares its two arguments for order.  Returns a negative integer,
+     *  or a positive integer as the first argument is less than
+     *  or greater than the second.
+     *
+     * @param p1 the first ConcretePiece to be compared.
+     * @param p2 the second ConcretePiece to be compared.
+     * @return a negative integer or a positive integer as the
+     * first argument is less than or greater than the
+     * second according to the requirements given in the exercise.
+     */
     @Override
     public int compare(ConcretePiece p1, ConcretePiece p2) {
         if (p1.getSteps() > p2.getSteps()) {
