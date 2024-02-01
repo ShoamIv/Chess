@@ -1,7 +1,5 @@
 import java.util.ArrayList;
 import java.util.Arrays;
-import java.util.Iterator;
-
 /**
  * GameLogic implemets PlayableLogic.
  *GameLogic responsible for the Chess-like game.
@@ -189,7 +187,7 @@ public class GameLogic implements PlayableLogic {
      * Move checks if it is the player(i) turn (i=1/2).
      * If all condition to move is legal, move change the position of the piece.
      * Move summon CheckSurrounding and IsCorner to execute "kiils" if reuqired.
-     *
+     *update the turns to keep track of who's turn it is.
      * @param a The starting position of the piece.
      * @param b The destination position for the piece.
      * @return if the piece has moved return true, else false.
@@ -219,16 +217,27 @@ public class GameLogic implements PlayableLogic {
         return true;
     }
 
+    /**
+     * first, add position b to Position List.
+     * update the board.
+     * @param piece
+     * @param a
+     * @param b
+     */
     private void ChangePosition(ConcretePiece piece, Position a, Position b) {
         addPosition(b, piece);
         _board[b.GetX()][b.GetY()] = piece;
         _board[a.GetX()][a.GetY()] = null;
     }
-
     private void addPositionToArrayList(Position p, int id) {
         positionsArrayList[id].add(p);
     }
 
+    /**
+     * add the required information for the comparators to the Lists.
+     * @param p
+     * @param concretePiece
+     */
     private void addPosition(Position p, ConcretePiece concretePiece) {
         if (concretePiece.getOwner().isPlayerOne()) {
             addSquares(concretePiece, calcSquares(positionsArrayList[concretePiece.getId() - 1].getLast(), p));
@@ -263,6 +272,13 @@ public class GameLogic implements PlayableLogic {
         return steppedPositionsArrayList;
     }
 
+    /**
+     * Ensure that the path from a to b is legal
+     * if the path is not legal return false.
+     * @param a
+     * @param b
+     * @return
+     */
     private boolean ValidPath(Position a, Position b) {
         if (!_board[a.GetX()][a.GetY()].isKing()) {
             if (b.Equalto(Corner1)) return false;
@@ -307,6 +323,12 @@ public class GameLogic implements PlayableLogic {
         return true;
     }
 
+    /**
+     *  Validate to the king go the corners.
+     * @param a
+     * @param b
+     * @return
+     */
     private boolean ValidCornerKing(Position a, Position b) {
         if (_board[a.GetX()][a.GetY()].isKing()) {
             if (b.Equalto(Corner1)) return true;
@@ -322,9 +344,17 @@ public class GameLogic implements PlayableLogic {
         _board[a.GetX()][a.GetY()].getOwner().addConcretePiece(_board[a.GetX()][a.GetY()]);
     }
 
+    /**
+     * The main functions that control the kill process in the game.
+     *First check if the piece at Position a is king, if it is return.
+     * Checks all 4 directions of the game:
+     * East: X+1, West:X-1, South=Y+1, North=Y-1.
+     * each direction checked separate.
+     * using helper functions in order to maintain the OOP principles.
+     * @param a
+     */
     private void CheckSurrounding(Position a) {
         ConcretePlayer p = _board[a.GetX()][a.GetY()].getOwner();
-        //Cannot Eat with King.
         if (_board[a.GetX()][a.GetY()].isKing()) return;
         else if (CheckEast(a, p)) {
             if (_board[a.GetX() + 1][a.GetY()] != null) {
@@ -441,6 +471,10 @@ public class GameLogic implements PlayableLogic {
         return false;
     }
 
+    /**
+     * as CheckSurrounding role, but this function handle the Corner cases.
+     * @param a
+     */
     private void IsCorner(Position a) {
         if (_board[a.GetX()][a.GetY()].isKing()) return;
         Player p = _board[a.GetX()][a.GetY()].getOwner();
@@ -557,6 +591,15 @@ public class GameLogic implements PlayableLogic {
         return false;
     }
 
+    /**
+     *  This function checks if King is being eaten.
+     *  if the King is on edge, calls for EatEdgeKing that check the Edge case
+     *  if the king is being eaten, the function return true to the boolean gameover.
+     *  once gameover is true, the game is over.
+     * @param King
+     * @param p
+     * @return
+     */
     private boolean EatKing(Position King, ConcretePlayer p) {
         if (King.GetX() == 0 || King.GetX() == 10 || King.GetY() == 0 || King.GetY() == 10) {
             return EatEdgeKing(King, p);
@@ -571,34 +614,35 @@ public class GameLogic implements PlayableLogic {
         return false;
     }
 
+    /**
+     * as written the EatKing,  checks the case where King is on edge.
+     * @param King
+     * @param p
+     * @return
+     */
     private boolean EatEdgeKing(Position King, Player p) {
         if (King.GetX() == 0 && _board[King.GetX() + 1][King.GetY()] != null && _board[King.GetX()][King.GetY() + 1] != null && _board[King.GetX()][King.GetY() - 1] != null) {
             if (King.GetX() == 0 && _board[King.GetX() + 1][King.GetY()].getOwner() == p && _board[King.GetX()][King.GetY() + 1].getOwner() == p && _board[King.GetX()][King.GetY() - 1].getOwner() == p) {
                 _board[King.GetX()][King.GetY()] = null;
-                gameover = true;
                 return true;
             }
         }
         if (King.GetX() == 10 && _board[King.GetX() - 1][King.GetY()] != null && _board[King.GetX()][King.GetY() + 1] != null && _board[King.GetX()][King.GetY() - 1] != null) {
             if (_board[King.GetX() - 1][King.GetY()].getOwner() == p && _board[King.GetX()][King.GetY() + 1].getOwner() == p && _board[King.GetX()][King.GetY() - 1].getOwner() == p) {
                 _board[King.GetX()][King.GetY()] = null;
-                gameover = true;
                 return true;
             }
         }
         if (King.GetY() == 0 && _board[King.GetX() + 1][King.GetY()] != null && _board[King.GetX() - 1][King.GetY()] != null && _board[King.GetX()][King.GetY() + 1] != null) {
             if (_board[King.GetX() + 1][King.GetY()].getOwner() == p && _board[King.GetX() - 1][King.GetY()].getOwner() == p && _board[King.GetX()][King.GetY() + 1].getOwner() == p) {
                 _board[King.GetX()][King.GetY()] = null;
-                gameover = true;
                 return true;
             }
         }
         if (King.GetY() == 10 && _board[King.GetX() + 1][King.GetY()] != null && _board[King.GetX() - 1][King.GetY()] != null && _board[King.GetX()][King.GetY() - 1] != null) {
             if (_board[King.GetX() + 1][King.GetY()].getOwner() == p && _board[King.GetX() - 1][King.GetY()].getOwner() == p && _board[King.GetX()][King.GetY() - 1].getOwner() == p) {
                 _board[King.GetX()][King.GetY()] = null;
-                gameover = true;
                 return true;
-
             }
         }
         return false;
@@ -619,6 +663,13 @@ public class GameLogic implements PlayableLogic {
         return player2;
     }
 
+    /**
+     * This function return true if the game is over.
+     * if it does than:
+     * increasing wins for the winning side.
+     * and print the required stats for the Comparators.
+     * @return
+     */
     @Override
     public boolean isGameFinished() {
         if (gameover) {
@@ -668,30 +719,19 @@ public class GameLogic implements PlayableLogic {
         printStatsBySquares();
         printStatsByPieces();
     }
-
     private void printStars() {
         System.out.println("***************************************************************************");
     }
 
-    private static void copyArrOfCP(ConcretePiece[] copy, ConcretePiece[] orig, int l) {
-        for (int i = 0; i < l; i++) {
-            if (orig[i].isPawn()) {
-                copy[i] = (Pawn) orig[i];
-            } else {
-                copy[i] = (King) orig[i];
-            }
-
-        }
-    }
-
+    /**
+     * Print stats according ConcretePiece Comparator: SortBySteps.
+     * @param w
+     * @param l
+     */
     private void printStatsBySteps(ConcretePlayer w, ConcretePlayer l) {
         ConcretePiece[] copyW = copyArrayOfConcretePiece((w).get_pieces());
-       // ConcretePiece[] copyW = new ConcretePiece[w.get_pieces().length];
-        //copyArrOfCP(copyW, w.get_pieces(), w.get_pieces().length);
         Arrays.sort(copyW, new SortBySteps());
          ConcretePiece[] copyL = copyArrayOfConcretePiece((l).get_pieces());
-        //ConcretePiece[] copyL = new ConcretePiece[l.get_pieces().length];
-        //copyArrOfCP(copyL, l.get_pieces(), l.get_pieces().length);
         Arrays.sort(copyL, new SortBySteps());
         if (w.isPlayerOne()) {
             for (int i = 0; i < 13; i++) {
@@ -742,6 +782,9 @@ public class GameLogic implements PlayableLogic {
         return copy;
     }
 
+    /**
+     * Print stats according Pawn, SortByKills Comparator
+     */
     private void printStatsByKills() {
         Pawn[] arrOfPawns = getArrayOfPawns(player1.get_pieces(), player2.get_pieces());
         Arrays.sort(arrOfPawns, new SortByKills());
@@ -768,6 +811,9 @@ public class GameLogic implements PlayableLogic {
         return arr;
     }
 
+    /**
+     * print stats according ConcretePiece, SortBySquares Comparator.
+     */
     private void printStatsBySquares() {
         ConcretePiece[] arrayOfConcretePieces = getArrayOfConcretePieces(player1.get_pieces(), player2.get_pieces());
         Arrays.sort(arrayOfConcretePieces, new SortBySquares());
@@ -794,6 +840,9 @@ public class GameLogic implements PlayableLogic {
         return arr;
     }
 
+    /**
+     * print stats according Position, SortByPieces Comparator.
+     */
     private void printStatsByPieces() {
         ArrayList<Position> steppedPositionsArrayList = steppedPositions();
         steppedPositionsArrayList.sort(new SortByPieces());
