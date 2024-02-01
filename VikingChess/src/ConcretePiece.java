@@ -2,37 +2,37 @@ import java.util.ArrayList;
 import java.util.Comparator;
 
 public abstract class ConcretePiece implements Piece {
-    private Player owner;
+    private ConcretePlayer owner;
     String type;
     private ArrayList<Position> positionsArrayList = new ArrayList<Position>(); //should be depreciated
     private int steps = 0;
     private int squares = 0;
     private int id; // save id of piece according to the figure in the assignment
 
-    public ConcretePiece(Player p) {
+    public ConcretePiece(ConcretePlayer p) {
         owner = p;
-        ((ConcretePlayer) p).addConcretePiece(this);
+        p.addConcretePiece(this);
     }
 
-    public ConcretePiece(Player p, int index) {
+    public ConcretePiece(ConcretePlayer p, int index) {
         owner = p;
         id = index;
-        ((ConcretePlayer) p).addConcretePiece(this);
+        p.addConcretePiece(this);
     }
 
-    public ConcretePiece(Player p, int index, String t) {
+    public ConcretePiece(ConcretePlayer p, int index, String t) {
         owner = p;
         id = index;
         type = t;
-        ((ConcretePlayer) p).addConcretePiece(this);
+        p.addConcretePiece(this);
     }
 
-    public ConcretePiece(Player p, int index, Position pos, String t) {
+    public ConcretePiece(ConcretePlayer p, int index, Position pos, String t) {
         owner = p;
         id = index;
         positionsArrayList.add(pos);
         type = t;
-        ((ConcretePlayer) p).addConcretePiece(this);
+        p.addConcretePiece(this);
     }
 
     public ArrayList<Position> getPositionsArrayList() {
@@ -41,7 +41,7 @@ public abstract class ConcretePiece implements Piece {
 
 
     @Override
-    public Player getOwner() {
+    public ConcretePlayer getOwner() {
         return owner;
     }
 
